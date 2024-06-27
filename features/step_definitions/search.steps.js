@@ -9,6 +9,8 @@ Before(async function () {
   const page = await browser.newPage();
   this.browser = browser;
   this.page = page;
+  const filmTimetLink = await page.$("li:nth-child(2) > a");
+  const reservSelector = ".acceptin-button";
 });
 
 After(async function () {
@@ -18,17 +20,21 @@ After(async function () {
 });
 
 Given("user is on {string} page", async function (string) {
-  return await this.page.goto(`https://netology.ru${string}`, {
+  return await this.page.goto(`http://qamid.tmweb.ru${string}`, {
     setTimeout: 20000,
   });
 });
 
-When("user search by {string}", async function (string) {
-  return await putText(this.page, "input", string);
+When("user check place {string}", async function (string) {
+    await page.waitForSelector(filmTimetLink, {timeout: 3000});
+    await filmTimetLink.click();
+    await clickElement(page, string);
+    await page.waitForSelector(reservSelector);
+    await page.click(reservSelector, { timeout: 3000 });
 });
 
-Then("user sees the course suggested {string}", async function (string) {
-  const actual = await getText(this.page, "a[data-name]");
-  const expected = await string;
-  expect(actual).contains(expected);
+Then("user see page with code {string}", async function (string) {
+  await page.waitForSelector(reservSelector, { visible: true });
+  const actual = await page.$eval(reservSelector, (link) => link.textContent);
+  expect(actual).contain(string);
 });

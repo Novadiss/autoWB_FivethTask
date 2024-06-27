@@ -13,11 +13,6 @@ afterEach(() => {
 });
 
 describe("qamid.tmweb.ru tests", () => {
-  // beforeEach(async () => {
-  //   const filmTimetLink = await page.$("li:nth-child(2) > a");
-  //   const reservSelector = ".acceptin-button";
-  // });
-
   test("One place check", async () => {
     const filmTimetLink = await page.$("li:nth-child(2) > a");
     const reservSelector = ".acceptin-button";
@@ -26,8 +21,8 @@ describe("qamid.tmweb.ru tests", () => {
     await page.waitForSelector(reservSelector);
     await page.click(reservSelector, {timeout: 3000});
     await page.waitForSelector(reservSelector, {visible: true,});
-    const actual = page.$eval(reservSelector, (link) => link.textContent);
-    expect(actual).toContain("Получить код бронирования");
+    const actual = await page.$eval(reservSelector, (link) => link.textContent);
+    expect(actual).contain("Получить код бронирования");
   });
   
   test("Three place check", async () => {
@@ -40,8 +35,8 @@ describe("qamid.tmweb.ru tests", () => {
     await page.waitForSelector(reservSelector);
     await page.click(reservSelector, {timeout: 3000});
     await page.waitForSelector(reservSelector, {visible: true,});
-    const actual = page.$eval(reservSelector, (link) => link.textContent);
-    expect(actual).toContain("Получить код бронирования");
+    const actual = await page.$eval(reservSelector, (link) => link.textContent);
+    expect(actual).contain("Получить код бронирования");
   });
 
   test("Disabled place check", async () => {
@@ -49,7 +44,9 @@ describe("qamid.tmweb.ru tests", () => {
     const reservSelector = ".acceptin-button";    
     await filmTimetLink.click();
     await clickElement(page, "div:nth-child(9) > span.buying-scheme__chair.buying-scheme__chair_disabled");
-    const actual = page.$eval(reservSelector, {visible: false,})
-    expect (actual);
+    await page.waitForSelector(reservSelector);
+    await page.click(reservSelector, { timeout: 3000 });
+    const actual = await page.$eval(reservSelector, (link) => link.textContent);
+    expect(actual).contain("Забронировать");
   });
 });
