@@ -32,6 +32,32 @@ When("user check film {string}", async function (string) {
   await this.page.click(".acceptin-button", { timeout: 3000 });
 });
 
+When("user check film {string} with tree place", async function (string) {
+  await this.page.waitForSelector(string, { timeout: 3000 });
+  await this.page.click(string);
+  await this.page.waitForSelector("div:nth-child(8) > span:nth-child(4)");
+  await this.page.click("div:nth-child(8) > span:nth-child(4)");
+  await this.page.waitForSelector("div:nth-child(6) > span:nth-child(5)");
+  await this.page.click("div:nth-child(6) > span:nth-child(5)");
+  await this.page.waitForSelector("div:nth-child(2) > span:nth-child(2)");
+  await this.page.click("div:nth-child(2) > span:nth-child(2)");
+  await this.page.waitForSelector(".acceptin-button");
+  await this.page.click(".acceptin-button", { timeout: 3000 });
+});
+
+When("user check film {string} with disable place", async function (string) {
+  await this.page.waitForSelector(string, { timeout: 3000 });
+  await this.page.click(string);
+  await this.page.waitForSelector(
+    "div:nth-child(9) > span.buying-scheme__chair.buying-scheme__chair_disabled"
+  );
+  await this.page.click(
+    "div:nth-child(9) > span.buying-scheme__chair.buying-scheme__chair_disabled"
+  );
+  await this.page.waitForSelector(".acceptin-button");
+  await this.page.click(".acceptin-button", { timeout: 3000 });
+});
+
 Then("user see page with code {string}", async function (string) {
   await this.page.waitForSelector(".acceptin-button", { visible: true });
   const actual = await this.page.$eval(".acceptin-button",(link) => link.textContent);
